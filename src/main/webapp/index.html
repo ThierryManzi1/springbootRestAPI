@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>springbootrestAPI</title>
+<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="screen"
+     href="http://tarruda.github.com/bootstrap-datetimepicker/assets/css/bootstrap-datetimepicker.min.css">
+  </head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+</head>
+<body>
+<!-- <input type="button" name="getData" id="getData"  class="btn btn-success" value="GET EMPLOYEE" onclick="getDataFromAPI();">
+ --><br><br>
+ <div class="container">
+ 	<div class="row">
+ 		<div class="col-md-6">
+		 	<form>
+			 	<div class="form-group">
+			 		<label for="employeeName">Name</label>
+			 		<input type="text" class="form-control" name="name" id="name">
+			 	</div>
+			 	<div class="form-group">
+			 		<label for="employeeDesignation">Designation</label>
+			 	    <input type="text" class="form-control input-lg" name="designation" id="designation">
+			 	</div>
+			 	<div class="form-group form-group-lg">
+			 		<label for="employeeExpertise">Expertise</label>
+			 	    <input type="text" class="form-control input-lg" name="expertise" id="expertise">
+			 	</div>
+			 	<!-- <div class="form-group">
+			 		<label for="createdAt">Created at</label>
+			 	    <input type="text" class="form-control" name="expertise" id="expertise">
+			 	</div> -->
+			 	<div class="form-group">
+			 		<label for="createdAt">Created at</label>
+				 	<div id="datetimepicker" class="input-append date" class="form-group form-group-lg" >		 	  
+					      <input type="text" id="createdAt" class="input-lg"></input>
+					      <span class="add-on">
+					        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+					      </span>
+	    			  </div>
+			 	</div>
+			 	<div class="form-group">
+			 		<input type="button" name="postData" id="postData" class="btn btn-primary" value="POST EMPLOYEE" onclick="postDataFromAPI();">
+			 	</div>
+			 	
+				
+			</form>		
+ 		</div>
+ 		<div class="col-md-6">
+ 			<table id="resultTbl" class="table table-striped">
+				<thead>
+					<tr>
+						<th>Name</th><th>Designation</th><th>Expertise</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+ 		</div>
+ 	</div>
+ </div>
+
+
+<script>
+ function getDataFromAPI(){
+	 console.log('get data from api called');
+	 var tbody =  $('#resultTbl').children('tbody');
+	 tbody.empty();
+	 $.ajax({
+		 url:"/company/employees",
+		 success:function(data){
+			 //$("#result").html(data);
+			 $.each(data, function(index){
+				 var row="<tr>";
+				 row = row + "<td>" + data[index].name + "</td>";
+				 row = row + "<td>" + data[index].designation + "</td>";
+				 row = row + "<td>" + data[index].expertise + "</td>";
+				 row = row+"</tr>";
+				 tbody.append(row);
+			 });
+		 }
+		 
+	 });
+ };
+ $(document).ready(function(){
+	 getDataFromAPI();
+  });
+
+
+function postDataFromAPI(){
+	var n = $("#name").val();
+	var d = $("#designation").val();
+	var e = $("#expertise").val();
+	var c = $("#createdAt").val()
+	var order={
+			"name":n,
+			"designation":d,
+			"expertise": e,
+			"createdAt":c
+	};
+	console.log(order)
+	
+	$.ajax({
+		url:"/company/saveemployees",
+		type : "POST",
+		data: JSON.stringify(order),
+        dataType: 'json',
+        contentType: 'application/json',
+		success:function(data){
+			getDataFromAPI();
+		},
+		error: function(err) {
+            alert(err.message, err);
+        }
+	});
+	
+};
+
+$(function () {
+    $('#datetimepicker10').datetimepicker({
+        viewMode: 'years',
+        format: 'MM-dd-yyyy'
+    });
+});
+
+
+</script>
+<script type="text/javascript"
+     src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js">
+    </script> 
+    <script type="text/javascript"
+     src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js">
+    </script>
+    <script type="text/javascript"
+     src="http://tarruda.github.com/bootstrap-datetimepicker/assets/js/bootstrap-datetimepicker.min.js">
+    </script>
+    <script type="text/javascript"
+     src="http://tarruda.github.com/bootstrap-datetimepicker/assets/js/bootstrap-datetimepicker.pt-BR.js">
+    </script>
+    <script type="text/javascript">
+      $('#datetimepicker').datetimepicker({
+        format: 'yyyy/MM/dd'
+      });
+    </script>
+
+
+</body>
+</html>
